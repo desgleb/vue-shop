@@ -1,5 +1,20 @@
 export default [
   {
+    title: "АВТОКРАН ИВАНОВЕЦ КС-45717К-1М",
+    price: 24000000,
+    image: "/img/kran.jpg",
+  },
+  {
+    title: "Торт Прага от Палыча",
+    price: 1367,
+    image: "/img/praga.jpg",
+  },
+  {
+    title: "Allroad A6",
+    price: 10546090,
+    image: "/img/allroad.jpg",
+  },
+  {
     title: "Радионяня Motorola MBP16",
     price: 3690,
     image: "/img/radio.jpg",
@@ -58,20 +73,5 @@ export default [
     title: "Наушники Sony",
     price: 30690,
     image: "/img/headphones.jpg",
-  },
-  {
-    title: "Радионяня Motorola MBP16",
-    price: 3690,
-    image: "/img/radio.jpg",
-  },
-  {
-    title: "Радионяня Motorola MBP16",
-    price: 3690,
-    image: "/img/radio.jpg",
-  },
-  {
-    title: "Радионяня Motorola MBP16",
-    price: 3690,
-    image: "/img/radio.jpg",
   },
 ];
