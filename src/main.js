@@ -1,7 +1,7 @@
 import Vue from "vue";
 import App from "./App.vue";
-import { message, message2 } from "./data";
-import showMessage from "./func";
+import { message, message2 } from "./data/data";
+import showMessage from "./data/func";
 
 Vue.config.productionTip = false;
 
