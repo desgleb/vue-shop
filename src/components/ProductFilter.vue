@@ -116,7 +116,7 @@ export default {
       currentColor: colors[0].hex,
     };
   },
-  props: ["priceFrom", "priceTo", "categoryId"],
+  props: ["priceFrom", "priceTo", "categoryId", "color"],
   computed: {
     categories() {
       return categories;
@@ -135,8 +135,8 @@ export default {
     categoryId(value) {
       this.currentCategoryId = value;
     },
-    colorHex(value) {
-      this.currentColor = colors[value].hex;
+    color(value) {
+      this.currentColor = value;
     },
   },
   methods: {
@@ -144,11 +144,13 @@ export default {
       this.$emit("update:priceFrom", this.currentPriceFrom);
       this.$emit("update:priceTo", this.currentPriceTo);
       this.$emit("update:categoryId", this.currentCategoryId);
+      this.$emit("update:color", this.currentColor);
     },
     reset() {
       this.$emit("update:priceFrom", 0);
       this.$emit("update:priceTo", 0);
       this.$emit("update:categoryId", 0);
+      this.$emit("update:color", "");
     },
   },
 };
