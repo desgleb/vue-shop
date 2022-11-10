@@ -31,7 +31,7 @@
         <ul class="colors">
           <li class="colors__item" v-for="color in colors" :key="color.hex">
             <label class="colors__label">
-              <input class="colors__radio sr-only" type="radio" name="color" :value="color.hex" checked="" />
+              <input class="colors__radio sr-only" type="radio" name="color" :value="color.hex" checked="" v-model="currentColor" />
               <span class="colors__value" :style="color.background"> </span>
             </label>
           </li>
@@ -113,6 +113,7 @@ export default {
       currentPriceFrom: 0,
       currentPriceTo: 0,
       currentCategoryId: 0,
+      currentColor: colors[0].hex,
     };
   },
   props: ["priceFrom", "priceTo", "categoryId"],
@@ -133,6 +134,9 @@ export default {
     },
     categoryId(value) {
       this.currentCategoryId = value;
+    },
+    colorHex(value) {
+      this.currentColor = colors[value].hex;
     },
   },
   methods: {
