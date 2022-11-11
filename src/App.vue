@@ -7,7 +7,12 @@
     </div>
 
     <div class="content__catalog">
-      <ProductFilter :price-from.sync="filterPriceFrom" :price-to.sync="filterPriceTo" :category-id.sync="filterCategoryId" :color.sync="filterColor"/>
+      <ProductFilter
+        :price-from.sync="filterPriceFrom"
+        :price-to.sync="filterPriceTo"
+        :category-id.sync="filterCategoryId"
+        :color.sync="filterColor"
+      />
 
       <section class="catalog">
         <ProductList :products="products" />
@@ -58,7 +63,13 @@ export default {
 
       if (this.filterColor) {
         // eslint-disable-next-line prettier/prettier
-        filteredProducts = filteredProducts.filter((product) => product.colors.includes(this.filterColor));
+        filteredProducts = filteredProducts.filter((product) => {
+          for (let i = 0; i < product.colors.length; i++) {
+            if (product.colors[i].hex === this.filterColor) return true;
+          }
+        });
+
+        console.log(filteredProducts);
       }
 
       return filteredProducts;
