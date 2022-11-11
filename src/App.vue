@@ -68,8 +68,6 @@ export default {
             if (product.colors[i].hex === this.filterColor) return true;
           }
         });
-
-        console.log(filteredProducts);
       }
 
       return filteredProducts;
