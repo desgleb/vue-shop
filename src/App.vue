@@ -69,7 +69,6 @@ export default {
           }
         });
       }
-
       return filteredProducts;
     },
     products() {
