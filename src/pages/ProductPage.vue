@@ -34,7 +34,7 @@
               <ul class="colors">
                 <li class="colors__item" v-for="itemColor in product.colors" :key="itemColor.hex">
                   <label class="colors__label">
-                    <input class="colors__radio sr-only" type="radio" :value="itemColor.hex" v-model="color" />
+                    <input class="colors__radio sr-only" type="radio" :value="itemColor.hex" />
                     <span class="colors__value" :style="itemColor.background"> </span>
                   </label>
                 </li>
@@ -42,7 +42,7 @@
             </fieldset>
 
             <fieldset class="form__block">
-              <legend class="form__legend">Объемб в ГБ:</legend>
+              <legend class="form__legend">Объем в ГБ:</legend>
 
               <ul class="sizes sizes--primery">
                 <li class="sizes__item">
