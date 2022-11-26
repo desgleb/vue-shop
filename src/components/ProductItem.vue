@@ -9,7 +9,7 @@
       <a href="#"> {{ product.title }} </a>
     </h3>
 
-    <span class="catalog__price"> {{ product.price }} </span>
+    <span class="catalog__price"> {{ product.price | numberFormat }} </span>
 
     <ul class="colors colors--black">
       <li class="colors__item" v-for="itemColor in product.colors" :key="itemColor.hex">
@@ -24,12 +24,16 @@
 
 <script>
 import goToPage from "@/helpers/goToPage";
+import numberFormat from "@/helpers/numberFormat";
 
 export default {
   data() {
     return {
       color: this.product.colors[0].hex,
     };
+  },
+  filters: {
+    numberFormat,
   },
   methods: {
     goToPage,
