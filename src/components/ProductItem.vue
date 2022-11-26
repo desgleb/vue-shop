@@ -1,7 +1,7 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
   <li class="catalog__item">
-    <a class="catalog__pic" href="#">
+    <a class="catalog__pic" href="#" @click.prevent="goToPage('product', { id: product.id })">
       <img :src="product.image" :alt="product.title" />
     </a>
 
@@ -23,11 +23,16 @@
 </template>
 
 <script>
+import goToPage from "@/helpers/goToPage";
+
 export default {
   data() {
     return {
       color: this.product.colors[0].hex,
     };
+  },
+  methods: {
+    goToPage,
   },
   props: ["product"],
 };
