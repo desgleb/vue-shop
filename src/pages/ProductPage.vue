@@ -158,6 +158,8 @@ export default {
         productId: this.product.id,
         amount: this.productAmount,
       });
+
+      this.productAmount = 1;
     },
   },
   components: { FormCounter },
