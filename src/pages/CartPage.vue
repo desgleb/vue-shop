@@ -11,7 +11,7 @@
       </ul>
 
       <h1 class="content__title">Корзина</h1>
-      <span class="content__info"> 3 товара </span>
+      <span class="content__info"> {{ products.length }} товара </span>
     </div>
 
     <section class="cart">
@@ -20,7 +20,7 @@
           <ul class="cart__list">
             <li
               class="cart__item product"
-              v-for="item in $store.getters.cartDetailProducts"
+              v-for="item in products"
               :key="item.productId"
             >
               <div class="product__pic">
@@ -71,7 +71,9 @@
           <p class="cart__desc">
             Мы&nbsp;посчитаем стоимость доставки на&nbsp;следующем этапе
           </p>
-          <p class="cart__price">Итого: <span>32 970 ₽</span></p>
+          <p class="cart__price">
+            Итого: <span>{{ totalPrice | numberFormat }} ₽</span>
+          </p>
 
           <button class="cart__button button button--primery" type="submit">
             Оформить заказ
@@ -84,8 +86,15 @@
 
 <script>
 import numberFormat from "@/helpers/numberFormat";
+import { mapGetters } from "vuex";
 
 export default {
   filters: { numberFormat },
+  computed: {
+    ...mapGetters({
+      products: "cartDetailProducts",
+      totalPrice: "cartTotalPrice",
+    }),
+  },
 };
 </script>
