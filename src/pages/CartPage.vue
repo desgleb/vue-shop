@@ -11,7 +11,16 @@
       </ul>
 
       <h1 class="content__title">Корзина</h1>
-      <span class="content__info"> {{ products.length }} товара </span>
+      <span class="content__info" v-if="products.length > 4">
+        {{ products.length }} товаров
+      </span>
+      <span class="content__info" v-else-if="products.length > 1">
+        {{ products.length }} товара
+      </span>
+      <span class="content__info" v-else-if="products.length === 1">
+        {{ products.length }} товар
+      </span>
+      <span class="content__info" v-else> Вы не выбрали ниодного товара </span>
     </div>
 
     <section class="cart">
