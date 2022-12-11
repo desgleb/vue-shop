@@ -44,6 +44,8 @@
   </li>
 </template>
 
+<!-- 84a57150cb750ff0f234debe15cfae48 -->
+
 <script>
 import numberFormat from "@/helpers/numberFormat";
 import { mapMutations } from "vuex";

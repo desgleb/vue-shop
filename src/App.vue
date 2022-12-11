@@ -125,5 +125,8 @@ import CartIndicator from "@/components/CartIndicator.vue";
 
 export default {
   components: { CartIndicator },
+  created() {
+    this.$store.dispatch("loadCart");
+  },
 };
 </script>
