@@ -24,5 +24,5 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
-# Skillbox Study API
+## Skillbox Study API
 API is [Here](https://vue-study.skillbox.cc/#/).
