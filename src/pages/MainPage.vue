@@ -11,7 +11,7 @@
         :price-from.sync="filterPriceFrom"
         :price-to.sync="filterPriceTo"
         :category-id.sync="filterCategoryId"
-        :color.sync="filterColor"
+        :color-id.sync="filterColorId"
       />
 
       <section class="catalog">
@@ -36,7 +36,7 @@ export default {
       filterPriceFrom: 0,
       filterPriceTo: 0,
       filterCategoryId: 0,
-      filterColor: "",
+      filterColorId: 0,
       page: 1,
       productsPerPage: 6,
       productsData: null,
@@ -65,7 +65,7 @@ export default {
             page: this.page,
             limit: this.productsPerPage,
             categoryId: this.filterCategoryId,
-            colorId: this.filterColor,
+            colorId: this.filterColorId,
             minPrice: this.filterPriceFrom,
             maxPrice: this.filterPriceTo,
           },
@@ -86,7 +86,7 @@ export default {
     filterCategoryId() {
       this.loadProducts();
     },
-    filterColor() {
+    filterColorId() {
       this.loadProducts();
     },
   },

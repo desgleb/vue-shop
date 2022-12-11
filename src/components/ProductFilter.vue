@@ -29,10 +29,10 @@
       <fieldset class="form__block">
         <legend class="form__legend">Цвет</legend>
         <ul class="colors">
-          <li class="colors__item" v-for="color in colors" :key="color.hex">
+          <li class="colors__item" v-for="color in colors" :key="color.id">
             <label class="colors__label">
-              <input class="colors__radio sr-only" type="radio" name="color" :value="color.hex" checked="" v-model="currentColor" />
-              <span class="colors__value" :style="color.background"> </span>
+              <input class="colors__radio sr-only" type="radio" name="color" :value="color.id" checked="" v-model="currentColorId" />
+              <span class="colors__value" :style="color.backgroundColor"> </span>
             </label>
           </li>
         </ul>
@@ -105,28 +105,33 @@
 </template>
 
 <script>
-import categories from "../data/categories";
-import colors from "../data/colors";
 import axios from "axios";
 
 export default {
+  props: ["priceFrom", "priceTo", "categoryId", "colorId"],
   data() {
     return {
       currentPriceFrom: 0,
       currentPriceTo: 0,
       currentCategoryId: 0,
-      currentColor: colors[0].hex,
+      currentColorId: 0,
       categoriesData: null,
       colorsData: null,
     };
   },
-  props: ["priceFrom", "priceTo", "categoryId", "color"],
   computed: {
     categories() {
-      return categories;
+      return this.categoriesData ? this.categoriesData.items : [];
     },
     colors() {
-      return colors;
+      return this.colorsData
+        ? this.colorsData.items.map((color) => {
+            return {
+              ...color,
+              backgroundColor: `background-color: ${color.code}`,
+            };
+          })
+        : [];
     },
   },
   watch: {
@@ -139,8 +144,8 @@ export default {
     categoryId(value) {
       this.currentCategoryId = value;
     },
-    color(value) {
-      this.currentColor = value;
+    colorId(value) {
+      this.currentColorId = value;
     },
   },
   methods: {
@@ -148,13 +153,13 @@ export default {
       this.$emit("update:priceFrom", this.currentPriceFrom);
       this.$emit("update:priceTo", this.currentPriceTo);
       this.$emit("update:categoryId", this.currentCategoryId);
-      this.$emit("update:color", this.currentColor);
+      this.$emit("update:colorId", this.currentColorId);
     },
     reset() {
       this.$emit("update:priceFrom", 0);
       this.$emit("update:priceTo", 0);
       this.$emit("update:categoryId", 0);
-      this.$emit("update:color", "");
+      this.$emit("update:colorId", "");
     },
     loadCategories() {
       axios
