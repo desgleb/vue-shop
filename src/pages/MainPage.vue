@@ -15,9 +15,12 @@
       />
 
       <section class="catalog">
-        <ProductList :products="products" />
 
-        <BasePagination v-model="page" :count="countProducts" :per-page="productsPerPage" />
+        <div v-if="productsLoading">Загрузка товаров...</div>
+
+        <ProductList :products="products" v-if="productsLoading === false"/>
+
+        <BasePagination v-model="page" :count="countProducts" :per-page="productsPerPage" v-if="productsLoading === false"/>
       </section>
     </div>
   </main>
@@ -28,6 +31,7 @@ import ProductList from "@/components/ProductList.vue";
 import BasePagination from "@/components/BasePagination.vue";
 import ProductFilter from "@/components/ProductFilter.vue";
 import axios from "axios";
+import { API_BASE_URL } from "@/config";
 
 export default {
   components: { ProductList, BasePagination, ProductFilter },
@@ -40,6 +44,7 @@ export default {
       page: 1,
       productsPerPage: 6,
       productsData: null,
+      productsLoading: false,
     };
   },
   computed: {
@@ -59,18 +64,23 @@ export default {
   },
   methods: {
     loadProducts() {
-      axios
-        .get(`https://vue-study.skillbox.cc/api/products`, {
-          params: {
-            page: this.page,
-            limit: this.productsPerPage,
-            categoryId: this.filterCategoryId,
-            colorId: this.filterColorId,
-            minPrice: this.filterPriceFrom,
-            maxPrice: this.filterPriceTo,
-          },
-        })
-        .then((response) => (this.productsData = response.data));
+      this.productsLoading = true;
+      clearTimeout(this.loadProductsTimer);
+      this.loadProductsTimer = setTimeout(() => {
+        axios
+          .get(API_BASE_URL + "/api/products", {
+            params: {
+              page: this.page,
+              limit: this.productsPerPage,
+              categoryId: this.filterCategoryId,
+              colorId: this.filterColorId,
+              minPrice: this.filterPriceFrom,
+              maxPrice: this.filterPriceTo,
+            },
+          })
+          .then((response) => (this.productsData = response.data))
+          .then(() => (this.productsLoading = false));
+      }, 5000);
     },
   },
   watch: {

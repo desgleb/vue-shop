@@ -106,6 +106,7 @@
 
 <script>
 import axios from "axios";
+import { API_BASE_URL } from "@/config";
 
 export default {
   props: ["priceFrom", "priceTo", "categoryId", "colorId"],
@@ -163,12 +164,12 @@ export default {
     },
     loadCategories() {
       axios
-        .get("https://vue-study.skillbox.cc/api/productCategories")
+        .get(API_BASE_URL + "/api/productCategories")
         .then((response) => (this.categoriesData = response.data));
     },
     loadColors() {
       axios
-        .get("https://vue-study.skillbox.cc/api/colors")
+        .get(API_BASE_URL + "/api/colors")
         .then((response) => (this.colorsData = response.data));
     },
   },
