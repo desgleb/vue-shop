@@ -107,6 +107,8 @@
 <script>
 import categories from "../data/categories";
 import colors from "../data/colors";
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -114,6 +116,8 @@ export default {
       currentPriceTo: 0,
       currentCategoryId: 0,
       currentColor: colors[0].hex,
+      categoriesData: null,
+      colorsData: null,
     };
   },
   props: ["priceFrom", "priceTo", "categoryId", "color"],
@@ -152,6 +156,20 @@ export default {
       this.$emit("update:categoryId", 0);
       this.$emit("update:color", "");
     },
+    loadCategories() {
+      axios
+        .get("https://vue-study.skillbox.cc/api/productCategories")
+        .then((response) => (this.categoriesData = response.data));
+    },
+    loadColors() {
+      axios
+        .get("https://vue-study.skillbox.cc/api/colors")
+        .then((response) => (this.colorsData = response.data));
+    },
+  },
+  created() {
+    this.loadCategories();
+    this.loadColors();
   },
 };
 </script>
