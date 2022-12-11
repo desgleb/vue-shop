@@ -1,3 +1,21 @@
+.button--reload {
+  max-width: 270px;
+  height: 40px;
+  border: 1px solid #000;
+  border-radius: 4px;
+  background-color: #333;
+  color: #fafafa;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
+
+@media (any-hover: hover) {
+  .button--reload:hover {
+    background-color: #fafafa;
+    color: #333;
+  }
+}
+
 .lds-roller {
   display: inline-block;
   position: relative;

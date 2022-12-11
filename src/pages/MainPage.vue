@@ -26,13 +26,7 @@
           <div></div>
         </div>
         <div v-if="productsLoadingFailed" style="font-size: 54px">Произошла ошибка при загрузке товаров.</div>
-        <button
-          v-if="productsLoadingFailed"
-          @click.prevent="loadProducts"
-          style="max-width: 270px; height: 40px; border: 1px solid #000; border-radius: 4px; background-color: #333; color: #fafafa; cursor: pointer;"
-        >
-          Попробовать еще раз
-        </button>
+        <button v-if="productsLoadingFailed" @click.prevent="loadProducts" class="button--reload">Попробовать еще раз</button>
 
         <ProductList :products="products" v-if="productsLoading === false && productsLoadingFailed === false" />
 
@@ -91,7 +85,7 @@ export default {
       clearTimeout(this.loadProductsTimer);
       this.loadProductsTimer = setTimeout(() => {
         axios
-          .get(API_BASE_URL + "/api/products2", {
+          .get(API_BASE_URL + "/api/products", {
             params: {
               page: this.page,
               limit: this.productsPerPage,
@@ -104,7 +98,7 @@ export default {
           .then((response) => (this.productsData = response.data))
           .catch(() => (this.productsLoadingFailed = true))
           .then(() => (this.productsLoading = false));
-      }, 5000);
+      }, 1500);
     },
   },
   watch: {

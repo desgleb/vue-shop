@@ -16,6 +16,19 @@
     </div>
 
     <section class="item">
+      <div v-if="productsLoading" class="lds-roller">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div v-if="productsLoadingFailed" style="font-size: 54px">Произошла ошибка при загрузке товаров.</div>
+      <button v-if="productsLoadingFailed" @click.prevent="loadProducts" class="button--reload">Попробовать еще раз</button>
+
       <div class="item__pics pics">
         <div class="pics__wrapper">
           <img width="570" height="570" :src="product.image" :alt="product.title" />
@@ -137,6 +150,9 @@ export default {
   data() {
     return {
       productAmount: 1,
+      productData: null,
+      productsLoading: false,
+      productsLoadingFailed: false,
     };
   },
   filters: {
@@ -161,7 +177,11 @@ export default {
 
       this.productAmount = 1;
     },
+    loadProduct() {},
   },
   components: { FormCounter },
+  created() {
+    this.loadProduct();
+  },
 };
 </script>
