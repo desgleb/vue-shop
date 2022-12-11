@@ -1,6 +1,22 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <main class="content container">
+  <main class="content container" v-if="productLoading">
+    <div class="lds-roller">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </main>
+  <main class="content container" v-else-if="!productData">
+    <div style="font-size: 54px">Произошла ошибка при загрузке товаров.</div>
+    <button @click.prevent="loadProduct" class="button--reload">Попробовать еще раз</button>
+  </main>
+  <main class="content container" v-else>
     <div class="content__top">
       <ul class="breadcrumbs">
         <li class="breadcrumbs__item">
@@ -16,22 +32,9 @@
     </div>
 
     <section class="item">
-      <div v-if="productsLoading" class="lds-roller">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-      <div v-if="productsLoadingFailed" style="font-size: 54px">Произошла ошибка при загрузке товаров.</div>
-      <button v-if="productsLoadingFailed" @click.prevent="loadProducts" class="button--reload">Попробовать еще раз</button>
-
       <div class="item__pics pics">
         <div class="pics__wrapper">
-          <img width="570" height="570" :src="product.image" :alt="product.title" />
+          <img width="570" height="570" :src="product.image.file.url" :alt="product.title" />
         </div>
       </div>
 
@@ -45,10 +48,10 @@
             <fieldset class="form__block">
               <legend class="form__legend">Цвет:</legend>
               <ul class="colors">
-                <li class="colors__item" v-for="itemColor in product.colors" :key="itemColor.hex">
+                <li class="colors__item" v-for="color in colors" :key="color.code">
                   <label class="colors__label">
-                    <input class="colors__radio sr-only" type="radio" :value="itemColor.hex" />
-                    <span class="colors__value" :style="itemColor.background"> </span>
+                    <input class="colors__radio sr-only" type="radio" :value="color.id" />
+                    <span class="colors__value" :style="color.backgroundColor"> </span>
                   </label>
                 </li>
               </ul>
@@ -140,19 +143,19 @@
 </template>
 
 <script>
-import products from "@/data/products";
-import categories from "@/data/categories";
 import goToPage from "@/helpers/goToPage";
 import numberFormat from "@/helpers/numberFormat";
 import FormCounter from "@/components/FormCounter.vue";
+import axios from "axios";
+import { API_BASE_URL } from "@/config";
 
 export default {
   data() {
     return {
       productAmount: 1,
       productData: null,
-      productsLoading: false,
-      productsLoadingFailed: false,
+      productLoading: false,
+      productLoadingFailed: false,
     };
   },
   filters: {
@@ -160,11 +163,18 @@ export default {
   },
   computed: {
     product() {
-      return products.find((product) => product.id === +this.$route.params.id);
+      return this.productData;
     },
     category() {
-      // eslint-disable-next-line prettier/prettier
-      return categories.find((category) => category.id === this.product.categoryId);
+      return this.productData.category;
+    },
+    colors() {
+      return this.productData.colors.map((color) => {
+        return {
+          ...color,
+          backgroundColor: `background-color: ${color.code}`,
+        };
+      });
     },
   },
   methods: {
@@ -177,7 +187,15 @@ export default {
 
       this.productAmount = 1;
     },
-    loadProduct() {},
+    loadProduct() {
+      this.productLoading = true;
+      this.productLoadingFailed = false;
+      axios
+        .get(API_BASE_URL + "/api/products/" + this.$route.params.id)
+        .then((response) => (this.productData = response.data))
+        .catch(() => (this.productLoadingFailed = true))
+        .then(() => (this.productLoading = false));
+    },
   },
   components: { FormCounter },
   created() {
