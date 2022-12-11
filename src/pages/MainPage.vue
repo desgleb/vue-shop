@@ -15,12 +15,33 @@
       />
 
       <section class="catalog">
+        <div v-if="productsLoading" class="lds-roller">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <div v-if="productsLoadingFailed" style="font-size: 54px">Произошла ошибка при загрузке товаров.</div>
+        <button
+          v-if="productsLoadingFailed"
+          @click.prevent="loadProducts"
+          style="max-width: 270px; height: 40px; border: 1px solid #000; border-radius: 4px; background-color: #333; color: #fafafa; cursor: pointer;"
+        >
+          Попробовать еще раз
+        </button>
 
-        <div v-if="productsLoading">Загрузка товаров...</div>
+        <ProductList :products="products" v-if="productsLoading === false && productsLoadingFailed === false" />
 
-        <ProductList :products="products" v-if="productsLoading === false"/>
-
-        <BasePagination v-model="page" :count="countProducts" :per-page="productsPerPage" v-if="productsLoading === false"/>
+        <BasePagination
+          v-model="page"
+          :count="countProducts"
+          :per-page="productsPerPage"
+          v-if="productsLoading === false && productsLoadingFailed === false"
+        />
       </section>
     </div>
   </main>
@@ -45,6 +66,7 @@ export default {
       productsPerPage: 6,
       productsData: null,
       productsLoading: false,
+      productsLoadingFailed: false,
     };
   },
   computed: {
@@ -65,10 +87,11 @@ export default {
   methods: {
     loadProducts() {
       this.productsLoading = true;
+      this.productsLoadingFailed = false;
       clearTimeout(this.loadProductsTimer);
       this.loadProductsTimer = setTimeout(() => {
         axios
-          .get(API_BASE_URL + "/api/products", {
+          .get(API_BASE_URL + "/api/products2", {
             params: {
               page: this.page,
               limit: this.productsPerPage,
@@ -79,6 +102,7 @@ export default {
             },
           })
           .then((response) => (this.productsData = response.data))
+          .catch(() => (this.productsLoadingFailed = true))
           .then(() => (this.productsLoading = false));
       }, 5000);
     },
