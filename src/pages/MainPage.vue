@@ -83,7 +83,7 @@ export default {
         : [];
     },
     countProducts() {
-      return this.filteredProducts.length;
+      return this.productsData ? this.productsData.pagination.total : 0;
     },
   },
   methods: {
@@ -93,6 +93,11 @@ export default {
           `https://vue-study.skillbox.cc/api/products?page=${this.page}&limit=${this.productsPerPage}`
         )
         .then((response) => (this.productsData = response.data));
+    },
+  },
+  watch: {
+    page() {
+      this.loadProducts();
     },
   },
   created() {

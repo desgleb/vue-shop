@@ -12,10 +12,10 @@
     <span class="catalog__price"> {{ product.price | numberFormat }} </span>
 
     <ul class="colors colors--black">
-      <li class="colors__item" v-for="itemColor in product.colors" :key="itemColor.hex">
+      <li class="colors__item" v-for="color in colors" :key="color.title">
         <label class="colors__label">
-          <input class="colors__radio sr-only" type="radio" :value="itemColor.hex" v-model="color" />
-          <span class="colors__value" :style="itemColor.background"> </span>
+          <input class="colors__radio sr-only" type="radio" :value="color.code" v-model="currentColor" />
+          <span class="colors__value" :style="color.backgroundColor"> </span>
         </label>
       </li>
     </ul>
@@ -29,7 +29,7 @@ import numberFormat from "@/helpers/numberFormat";
 export default {
   data() {
     return {
-      color: this.product.colors[0].hex,
+      currentColor: this.product.colors[0].code,
     };
   },
   filters: {
@@ -37,6 +37,16 @@ export default {
   },
   methods: {
     goToPage,
+  },
+  computed: {
+    colors() {
+      return this.product.colors.map((color) => {
+        return {
+          ...color,
+          backgroundColor: `background-color: ${color.code}`,
+        };
+      });
+    },
   },
   props: ["product"],
 };
