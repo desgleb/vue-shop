@@ -148,6 +148,7 @@ import numberFormat from "@/helpers/numberFormat";
 import FormCounter from "@/components/FormCounter.vue";
 import axios from "axios";
 import { API_BASE_URL } from "@/config";
+import { mapActions } from "vuex";
 
 export default {
   data() {
@@ -178,9 +179,10 @@ export default {
     },
   },
   methods: {
+    ...mapActions(["addProductToCart"]),
     goToPage,
     addToCart() {
-      this.$store.commit("addProductToCart", {
+      this.addProductToCart({
         productId: this.product.id,
         amount: this.productAmount,
       });
