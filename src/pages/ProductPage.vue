@@ -84,8 +84,11 @@
 
             <div class="item__row">
               <FormCounter :product-amount.sync="productAmount" />
-              <button class="button button--primery" type="submit">В корзину</button>
+              <button class="button button--primery" type="submit" :disabled="productAddSending">В корзину</button>
             </div>
+
+            <div v-show="productAdded">Товар добавлен в корзину</div>
+            <div v-show="productAddSending">Добавляем товар в корзину...</div>
           </form>
         </div>
       </div>
@@ -157,6 +160,8 @@ export default {
       productData: null,
       productLoading: false,
       productLoadingFailed: false,
+      productAdded: false,
+      productAddSending: false,
     };
   },
   filters: {
@@ -182,9 +187,14 @@ export default {
     ...mapActions(["addProductToCart"]),
     goToPage,
     addToCart() {
+      this.productAdded = false;
+      this.productAddSending = true;
       this.addProductToCart({
         productId: this.product.id,
         amount: this.productAmount,
+      }).then(() => {
+        this.productAdded = true;
+        this.productAddSending = false;
       });
 
       this.productAmount = 1;
