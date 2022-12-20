@@ -3,28 +3,21 @@
     <input
       v-model="dataValue"
       class="form__input"
-      type="text"
-      name="name"
+      :type="type"
       :placeholder="placeholder"
     />
   </BaseFormField>
 </template>
 
 <script>
-import BaseFormField from "./BaseFormField.vue";
+import formFieldMixin from "@/mixins/formFieldMixin";
 
 export default {
-  props: ["title", "error", "placeholder", "value"],
-  components: { BaseFormField },
-  computed: {
-    dataValue: {
-      get() {
-        return this.value;
-      },
-      set(value) {
-        this.$emit("input", value);
-      },
+  props: {
+    type: {
+      default: "text",
     },
   },
+  mixins: [formFieldMixin],
 };
 </script>
