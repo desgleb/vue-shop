@@ -177,6 +177,8 @@
 import BaseFormText from "@/components/BaseFormText.vue";
 import BaseFormTextarea from "@/components/BaseFormTextarea.vue";
 import { mapGetters } from "vuex";
+import axios from "axios";
+import { API_BASE_URL } from "@/config";
 
 export default {
   components: { BaseFormText, BaseFormTextarea },
@@ -184,6 +186,7 @@ export default {
     return {
       formData: {},
       formError: {},
+      // formErrorMessage: "",
     };
   },
   computed: {
@@ -191,6 +194,31 @@ export default {
       products: "cartDetailProducts",
       totalPrice: "cartTotalPrice",
     }),
+  },
+  methods: {
+    order() {
+      this.formError = {};
+      // this.formErrorMessage = "";
+      axios
+        .post(
+          API_BASE_URL + "/api/orders",
+          {
+            ...this.formData,
+          },
+          {
+            params: {
+              userAccessKey: this.$store.state.userAccessKey,
+            },
+          }
+        )
+        .than(() => {
+          this.$store.commit("resetCart");
+        })
+        .catch((error) => {
+          this.formError = error.response.data.error.request || {};
+          // this.formErrorMessage = error.response.data.error.message;
+        });
+    },
   },
 };
 </script>
