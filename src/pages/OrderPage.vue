@@ -166,11 +166,10 @@
             Оформить заказ
           </button>
         </div>
-        <div class="cart__error form__error-block">
+        <div class="cart__error form__error-block" v-if="formErrorMessage">
           <h4>Заявка не отправлена!</h4>
           <p>
-            Похоже произошла ошибка. Попробуйте отправить снова или
-            перезагрузите страницу.
+            {{ formErrorMessage }}
           </p>
         </div>
       </form>
