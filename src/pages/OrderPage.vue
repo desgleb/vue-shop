@@ -18,7 +18,12 @@
     </div>
 
     <section class="cart">
-      <form class="cart__form form" action="#" method="POST">
+      <form
+        class="cart__form form"
+        action="#"
+        method="POST"
+        @submit.prevent="order"
+      >
         <div class="cart__field">
           <div class="cart__data">
             <BaseFormText
@@ -186,7 +191,7 @@ export default {
     return {
       formData: {},
       formError: {},
-      // formErrorMessage: "",
+      formErrorMessage: "",
     };
   },
   computed: {
@@ -211,12 +216,13 @@ export default {
             },
           }
         )
-        .than(() => {
-          this.$store.commit("resetCart");
-        })
+        // .than(() => {
+        //   this.$store.commit("resetCart");
+        // })
         .catch((error) => {
+          console.log(error.response.data.error);
           this.formError = error.response.data.error.request || {};
-          // this.formErrorMessage = error.response.data.error.message;
+          this.formErrorMessage = error.response.data.error.message;
         });
     },
   },
