@@ -164,6 +164,16 @@
 
           <button class="cart__button button button--primery" type="submit">
             Оформить заказ
+            <div v-if="formSending" class="lds-roller">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
           </button>
         </div>
         <div class="cart__error form__error-block" v-if="formErrorMessage">
@@ -191,6 +201,7 @@ export default {
       formData: {},
       formError: {},
       formErrorMessage: "",
+      formSending: false,
     };
   },
   computed: {
@@ -202,7 +213,8 @@ export default {
   methods: {
     order() {
       this.formError = {};
-      // this.formErrorMessage = "";
+      this.formErrorMessage = "";
+      this.formSending = true;
       axios
         .post(
           API_BASE_URL + "/api/orders",
@@ -215,14 +227,15 @@ export default {
             },
           }
         )
-        // .than(() => {
-        //   this.$store.commit("resetCart");
-        // })
+        .then(() => {
+          this.$store.commit("resetCart");
+        })
         .catch((error) => {
           console.log(error.response.data.error);
           this.formError = error.response.data.error.request || {};
           this.formErrorMessage = error.response.data.error.message;
-        });
+        })
+        .then(() => (this.formSending = false));
     },
   },
 };
