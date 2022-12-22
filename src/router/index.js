@@ -14,7 +14,7 @@ const routes = [
   { name: "product", component: ProductPage, path: "/product/:id" },
   { name: "cart", component: CartPage, path: "/cart" },
   { name: "order", component: OrderPage, path: "/order" },
-  { name: "orderInfo", component: OrderInfoPage, path: "/order/info" },
+  { name: "orderInfo", component: OrderInfoPage, path: "/order/:id" },
   { name: "notFound", component: NotFoundPage, path: "*" },
 ];
 

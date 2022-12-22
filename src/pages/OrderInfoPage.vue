@@ -13,7 +13,9 @@
         </li>
       </ul>
 
-      <h1 class="content__title">Заказ оформлен <span>№ 23621</span></h1>
+      <h1 class="content__title">
+        Заказ оформлен <span>№ {{ orderInfo.id }}</span>
+      </h1>
     </div>
 
     <section class="cart">
@@ -29,22 +31,22 @@
             <li class="dictionary__item">
               <span class="dictionary__key"> Получатель </span>
               <span class="dictionary__value">
-                Иванова Василиса Алексеевна
+                {{ orderInfo.name }}
               </span>
             </li>
             <li class="dictionary__item">
               <span class="dictionary__key"> Адрес доставки </span>
               <span class="dictionary__value">
-                Москва, ул. Ленина, 21, кв. 33
+                {{ orderInfo.address }}
               </span>
             </li>
             <li class="dictionary__item">
               <span class="dictionary__key"> Телефон </span>
-              <span class="dictionary__value"> 8 800 989 74 84 </span>
+              <span class="dictionary__value"> {{ orderInfo.phone }} </span>
             </li>
             <li class="dictionary__item">
               <span class="dictionary__key"> Email </span>
-              <span class="dictionary__value"> lalala@mail.ru </span>
+              <span class="dictionary__value"> {{ orderInfo.email }} </span>
             </li>
             <li class="dictionary__item">
               <span class="dictionary__key"> Способ оплаты </span>
@@ -83,5 +85,19 @@
 </template>
 
 <script>
-export default {};
+export default {
+  created() {
+    if (
+      this.$store.state.orderInfo &&
+      this.$store.state.orderInfo.id === this.$route.params.id
+    )
+      return;
+    this.$store.dispatch("loadOrderInfo", this.$route.params.id);
+  },
+  computed: {
+    orderInfo() {
+      return this.$store.state.orderInfo || {};
+    },
+  },
+};
 </script>
