@@ -3,8 +3,10 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
-createApp({
-  router,
-  store,
+const app = createApp({
   render: (h) => h(App),
-}).$mount("#app");
+});
+
+app.use(router);
+app.use(store);
+app.mount("#app");
