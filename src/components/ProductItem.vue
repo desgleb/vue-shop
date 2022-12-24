@@ -9,7 +9,7 @@
       <a href="#"> {{ product.title }} </a>
     </h3>
 
-    <span class="catalog__price"> {{ product.price | numberFormat }} </span>
+    <span class="catalog__price"> {{ product.price }} </span>
 
     <ul class="colors colors--black">
       <li class="colors__item" v-for="color in colors" :key="color.title">

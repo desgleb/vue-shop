@@ -35,9 +35,7 @@
       </button>
     </div>
 
-    <b class="product__price">
-      {{ (item.amount * item.product.price) | numberFormat }} ₽
-    </b>
+    <b class="product__price">{{ item.amount * item.product.price }} ₽</b>
 
     <button
       class="product__del button-del"

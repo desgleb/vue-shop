@@ -43,7 +43,7 @@
         <h2 class="item__title">{{ product.title }}</h2>
         <div class="item__form">
           <form class="form" action="#" method="POST" @submit.prevent="addToCart">
-            <b class="item__price"> {{ product.price | numberFormat }} </b>
+            <b class="item__price"> {{ product.price }} </b>
 
             <fieldset class="form__block">
               <legend class="form__legend">Цвет:</legend>

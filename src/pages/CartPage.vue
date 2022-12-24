@@ -40,11 +40,10 @@
             Мы&nbsp;посчитаем стоимость доставки на&nbsp;следующем этапе
           </p>
           <p class="cart__price">
-            Итого: <span>{{ totalPrice | numberFormat }} ₽</span>
+            Итого: <span>{{ totalPrice }} ₽</span>
           </p>
 
           <router-link
-            tag="button"
             :to="{ name: 'order' }"
             class="cart__button button button--primery"
             type="submit"
