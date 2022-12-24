@@ -83,7 +83,7 @@
             </fieldset>
 
             <div class="item__row">
-              <FormCounter :product-amount.sync="productAmount" />
+              <FormCounter v-model:product-amount="productAmount" />
               <button class="button button--primery" type="submit" :disabled="productAddSending">В корзину</button>
             </div>
 
