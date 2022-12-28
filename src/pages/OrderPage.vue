@@ -149,7 +149,7 @@
               :key="product.productId"
             >
               <h3>{{ product.product.title }}</h3>
-              <b>{{ product.product.price }} ₽</b>
+              <b>{{ product.product.price * product.amount }} ₽</b>
               <span>Артикул: {{ product.product.id }}</span>
             </li>
           </ul>
@@ -158,13 +158,12 @@
             <p>Доставка: <b>500 ₽</b></p>
             <p>
               Итого: <b>{{ products.length }}</b> товара на сумму
-              <b>{{ totalPrice }} ₽</b>
+              <b>{{ totalPricePretty }} ₽</b>
             </p>
           </div>
 
           <button class="cart__button button button--primery" type="submit">
-            Оформить заказ
-            <div v-if="formSending" class="lds-roller">
+            <div v-if="formSending" class="lds-roller color--green">
               <div></div>
               <div></div>
               <div></div>
@@ -174,6 +173,7 @@
               <div></div>
               <div></div>
             </div>
+            <span v-else>Оформить заказ</span>
           </button>
         </div>
         <div class="cart__error form__error-block" v-if="formErrorMessage">
@@ -193,6 +193,7 @@ import BaseFormTextarea from "@/components/BaseFormTextarea.vue";
 import { mapGetters } from "vuex";
 import axios from "axios";
 import { API_BASE_URL } from "@/config";
+import numberFormat from "@/helpers/numberFormat";
 
 export default {
   components: { BaseFormText, BaseFormTextarea },
@@ -209,6 +210,9 @@ export default {
       products: "cartDetailProducts",
       totalPrice: "cartTotalPrice",
     }),
+    totalPricePretty() {
+      return numberFormat(this.totalPrice);
+    },
   },
   methods: {
     order() {

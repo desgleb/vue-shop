@@ -9,7 +9,7 @@
       <a href="#"> {{ product.title }} </a>
     </h3>
 
-    <span class="catalog__price"> {{ product.price }} </span>
+    <span class="catalog__price"> {{ pricePretty }} </span>
 
     <ul class="colors colors--black">
       <li class="colors__item" v-for="color in colors" :key="color.title">
@@ -32,13 +32,13 @@ export default {
       currentColor: this.product.colors[0].code,
     };
   },
-  filters: {
-    numberFormat,
-  },
   methods: {
     goToPage,
   },
   computed: {
+    pricePretty() {
+      return numberFormat(this.product.price);
+    },
     colors() {
       return this.product.colors.map((color) => {
         return {

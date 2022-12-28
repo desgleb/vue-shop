@@ -43,7 +43,7 @@
         <h2 class="item__title">{{ product.title }}</h2>
         <div class="item__form">
           <form class="form" action="#" method="POST" @submit.prevent="addToCart">
-            <b class="item__price"> {{ product.price }} </b>
+            <b class="item__price"> {{ pricePretty }} </b>
 
             <fieldset class="form__block">
               <legend class="form__legend">Цвет:</legend>
@@ -164,10 +164,10 @@ export default {
       productAddSending: false,
     };
   },
-  filters: {
-    numberFormat,
-  },
   computed: {
+    pricePretty() {
+      return numberFormat(this.product.price);
+    },
     product() {
       return this.productData;
     },
@@ -210,13 +210,11 @@ export default {
     },
   },
   components: { FormCounter },
-  watch: {
-    "this.$route.params.id": {
-      handler() {
-        this.loadProduct();
-      },
-      immediate: true,
-    },
+  created() {
+    this.loadProduct();
+  },
+  beforeRouteUpdate() {
+    this.loadProduct();
   },
 };
 </script>

@@ -63,7 +63,7 @@
               :key="product.id"
             >
               <h3>{{ product.product.title }}</h3>
-              <b>{{ product.price * product.quantity }} ₽</b>
+              <b>{{ totalPricePretty }} ₽</b>
               <span>Артикул: {{ product.id }}</span>
             </li>
           </ul>
