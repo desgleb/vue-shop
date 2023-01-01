@@ -1,14 +1,14 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
   <ul class="catalog__list">
-    <ProductItem class="catalog__item" :products="products"></ProductItem>
+    <ProductItems class="catalog__item" :products="products"></ProductItems>
   </ul>
 </template>
 
 <script>
-import ProductItem from "./ProductItem.vue";
+import ProductItems from "./ProductItems.vue";
 export default {
   props: ["products"],
-  components: { ProductItem },
+  components: { ProductItems },
 };
 </script>

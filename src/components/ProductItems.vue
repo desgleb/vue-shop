@@ -1,6 +1,6 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <li v-bind="$attrs" v-for="product in productsNormalized" :key="product.id">
+  <li v-bind="$attrs" v-for="product in productsNormalized" :key="product.id" :ref="fillRefs">
     <router-link class="catalog__pic" :to="{ name: 'product', params: { id: product.id } }">
       <img :src="product.image" :alt="product.title" />
     </router-link>
@@ -31,10 +31,16 @@ export default {
   data() {
     return {
       currentColor: this.products[0].colors[0].code,
+      productsElements: [],
     };
   },
   methods: {
     goToPage,
+    fillRefs(element) {
+      if (element) {
+        this.productsElements.push(element);
+      }
+    },
   },
   computed: {
     productsNormalized() {
@@ -51,6 +57,9 @@ export default {
         };
       });
     },
+  },
+  beforeUpdate() {
+    this.productsElements = [];
   },
   props: ["products"],
 };
