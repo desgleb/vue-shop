@@ -1,11 +1,7 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
   <ul class="catalog__list">
-    <ProductItem
-      v-for="product in products"
-      :key="product.id"
-      :product="product"
-    ></ProductItem>
+    <ProductItem class="catalog__item" :products="products"></ProductItem>
   </ul>
 </template>
 

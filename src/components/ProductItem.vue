@@ -1,6 +1,6 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <li class="catalog__item">
+  <li v-bind="$attrs" v-for="product in productsNormalized" :key="product.id">
     <router-link class="catalog__pic" :to="{ name: 'product', params: { id: product.id } }">
       <img :src="product.image" :alt="product.title" />
     </router-link>
@@ -9,10 +9,10 @@
       <a href="#"> {{ product.title }} </a>
     </h3>
 
-    <span class="catalog__price"> {{ pricePretty }} </span>
+    <span class="catalog__price"> {{ product.pricePretty }} </span>
 
     <ul class="colors colors--black">
-      <li class="colors__item" v-for="color in colors" :key="color.title">
+      <li class="colors__item" v-for="color in product.colors" :key="color.title">
         <label class="colors__label">
           <input class="colors__radio sr-only" type="radio" :value="color.code" v-model="currentColor" />
           <span class="colors__value" :style="color.backgroundColor"> </span>
@@ -27,27 +27,31 @@ import goToPage from "@/helpers/goToPage";
 import numberFormat from "@/helpers/numberFormat";
 
 export default {
+  inheritAttrs: false,
   data() {
     return {
-      currentColor: this.product.colors[0].code,
+      currentColor: this.products[0].colors[0].code,
     };
   },
   methods: {
     goToPage,
   },
   computed: {
-    pricePretty() {
-      return numberFormat(this.product.price);
-    },
-    colors() {
-      return this.product.colors.map((color) => {
+    productsNormalized() {
+      return this.products.map((product) => {
         return {
-          ...color,
-          backgroundColor: `background-color: ${color.code}`,
+          ...product,
+          pricePretty: numberFormat(product.price),
+          colors: product.colors.map((color) => {
+            return {
+              ...color,
+              backgroundColor: `background-color: ${color.code}`,
+            };
+          }),
         };
       });
     },
   },
-  props: ["product"],
+  props: ["products"],
 };
 </script>
