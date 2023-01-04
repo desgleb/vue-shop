@@ -1,6 +1,14 @@
 <template>
   <teleport v-if="open" to="#teleport-target">
-    <slot></slot>
+    <div class="teleport-blackout"></div>
+    <div class="teleport-modal">
+      <div class="teleport-modal__content">
+        <button type="button" class="teleport-modal__close" @click="doClose">
+          X
+        </button>
+        <slot></slot>
+      </div>
+    </div>
   </teleport>
 </template>
 
@@ -8,6 +16,11 @@
 export default {
   props: {
     open: { type: Boolean },
+  },
+  methods: {
+    doClose() {
+      this.$emit("update:open", false);
+    },
   },
 };
 </script>

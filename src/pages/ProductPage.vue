@@ -85,7 +85,7 @@
             <div class="item__row">
               <FormCounter v-model:product-amount="productAmount" />
               <button class="button button--primery" type="submit" :disabled="productAddSending">В корзину</button>
-              <BaseModal :open="isShowAddedMessage">
+              <BaseModal v-model:open="isShowAddedMessage">
                 Товар добавлен в корзину
               </BaseModal>
             </div>
