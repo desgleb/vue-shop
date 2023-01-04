@@ -85,6 +85,9 @@
             <div class="item__row">
               <FormCounter v-model:product-amount="productAmount" />
               <button class="button button--primery" type="submit" :disabled="productAddSending">В корзину</button>
+              <teleport v-if="isShowAddedMessage" to='#teleport-target'>
+                Товар добавлен в корзину
+              </teleport>
             </div>
 
             <div v-show="productAdded">Товар добавлен в корзину</div>
@@ -160,6 +163,7 @@ export default {
       productData: null,
       productLoading: false,
       productLoadingFailed: false,
+      isShowAddedMessage: false,
       productAdded: false,
       productAddSending: false,
     };
@@ -193,6 +197,7 @@ export default {
         productId: this.product.id,
         amount: this.productAmount,
       }).then(() => {
+        this.isShowAddedMessage = true;
         this.productAdded = true;
         this.productAddSending = false;
       });

@@ -116,6 +116,8 @@
       <span class="footer__copyright"> © 2020 Технозавррр </span>
     </div>
   </footer>
+
+  <div id="teleport-target"></div>
 </template>
 
 <script>
