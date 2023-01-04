@@ -85,9 +85,9 @@
             <div class="item__row">
               <FormCounter v-model:product-amount="productAmount" />
               <button class="button button--primery" type="submit" :disabled="productAddSending">В корзину</button>
-              <teleport v-if="isShowAddedMessage" to='#teleport-target'>
+              <BaseModal :open="isShowAddedMessage">
                 Товар добавлен в корзину
-              </teleport>
+              </BaseModal>
             </div>
 
             <div v-show="productAdded">Товар добавлен в корзину</div>
@@ -152,6 +152,7 @@
 import goToPage from "@/helpers/goToPage";
 import numberFormat from "@/helpers/numberFormat";
 import FormCounter from "@/components/FormCounter.vue";
+import BaseModal from "@/components/BaseModal.vue";
 import axios from "axios";
 import { API_BASE_URL } from "@/config";
 import { mapActions } from "vuex";
@@ -214,7 +215,7 @@ export default {
         .then(() => (this.productLoading = false));
     },
   },
-  components: { FormCounter },
+  components: { FormCounter, BaseModal },
   created() {
     this.loadProduct();
   },
