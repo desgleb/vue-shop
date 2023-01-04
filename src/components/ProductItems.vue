@@ -1,11 +1,11 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <li v-bind="$attrs" v-for="product in productsNormalized" :key="product.id" :ref="fillRefs">
+  <li v-bind="$attrs" v-for="product in productsNormalized" :key="product.id">
     <router-link class="catalog__pic" :to="{ name: 'product', params: { id: product.id } }">
       <img :src="product.image" :alt="product.title" />
     </router-link>
 
-    <h3 class="catalog__title">
+    <h3 class="catalog__title" @click.prevent="openQuickView(product.id)">
       <a href="#"> {{ product.title }} </a>
     </h3>
 
@@ -20,29 +20,45 @@
       </li>
     </ul>
   </li>
+
+  <BaseModal v-model:open="isQuickViewOpen">
+    <ProductQuickView :product-id="currentProductId" />
+  </BaseModal>
 </template>
 
 <script>
 import goToPage from "@/helpers/goToPage";
 import numberFormat from "@/helpers/numberFormat";
+import BaseModal from "@/components/BaseModal.vue";
+import ProductQuickView from "@/components/ProductQuickView.vue";
 
 export default {
+  components: { BaseModal, ProductQuickView },
   inheritAttrs: false,
   data() {
     return {
       currentColor: this.products[0].colors[0].code,
       productsElements: [],
+      currentProductId: null,
     };
   },
   methods: {
     goToPage,
-    fillRefs(element) {
-      if (element) {
-        this.productsElements.push(element);
-      }
+    openQuickView(productId) {
+      this.currentProductId = productId;
     },
   },
   computed: {
+    isQuickViewOpen: {
+      get() {
+        return !!this.currentProductId;
+      },
+      set(isOpen) {
+        if (!isOpen) {
+          this.currentProductId = null;
+        }
+      },
+    },
     productsNormalized() {
       return this.products.map((product) => {
         return {
