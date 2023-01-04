@@ -30,10 +30,17 @@
 import goToPage from "@/helpers/goToPage";
 import numberFormat from "@/helpers/numberFormat";
 import BaseModal from "@/components/BaseModal.vue";
-import ProductQuickView from "@/components/ProductQuickView.vue";
+import { defineAsyncComponent, h } from "vue";
 
 export default {
-  components: { BaseModal, ProductQuickView },
+  components: {
+    BaseModal,
+    ProductQuickView: defineAsyncComponent({
+      loader: () => import("@/components/ProductQuickView.vue"),
+      delay: 0,
+      loadingComponent: () => h("div", "Загрузка..."),
+    }),
+  },
   inheritAttrs: false,
   data() {
     return {
