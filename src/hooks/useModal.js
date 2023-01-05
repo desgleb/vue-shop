@@ -1,5 +1,7 @@
 import { computed, getCurrentInstance, ref, watch } from "vue";
 
+// ВАЖНО!!! Чтобы состояние было доступно в других компонентах,
+// необходимо, чтобы переменная состояния находилась на верхнем уровне файла
 const openModalsCount = ref(new Set());
 
 export default function () {
