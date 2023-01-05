@@ -153,7 +153,7 @@ import BaseModal from "@/components/BaseModal.vue";
 import axios from "axios";
 import { API_BASE_URL } from "@/config";
 import { useStore } from "vuex";
-import { computed, defineComponent, ref, watch } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { useRoute } from "vue-router";
 
 export default defineComponent({
@@ -164,13 +164,9 @@ export default defineComponent({
   setup() {
     const $store = useStore();
     const $route = useRoute();
+
     const productAmount = ref(1);
     const productData = ref(null);
-    const productLoading = ref(false);
-    const productLoadingFailed = ref(false);
-    const isShowAddedMessage = ref(false);
-    const productAdded = ref(false);
-    const productAddSending = ref(false);
 
     const pricePretty = computed(() => {
       return numberFormat(product.value.price);
@@ -190,6 +186,9 @@ export default defineComponent({
       });
     });
 
+    const isShowAddedMessage = ref(false);
+    const productAdded = ref(false);
+    const productAddSending = ref(false);
     const addToCart = () => {
       productAdded.value = false;
       productAddSending.value = true;
@@ -206,6 +205,9 @@ export default defineComponent({
 
       productAmount.value = 1;
     };
+
+    const productLoading = ref(false);
+    const productLoadingFailed = ref(false);
     const loadProduct = () => {
       productLoading.value = true;
       productLoadingFailed.value = false;
@@ -216,17 +218,7 @@ export default defineComponent({
         .then(() => (productLoading.value = false));
     };
 
-    watch(
-      () => $route.fullPath,
-      () => {
-        loadProduct();
-      },
-      { immediate: true }
-    );
-
-    // onBeforeRouteUpdate(() => {
-    //   loadProduct();
-    // });
+    loadProduct();
 
     return {
       addToCart,
@@ -244,71 +236,4 @@ export default defineComponent({
     };
   },
 });
-
-// export default {
-//   data() {
-//     return {
-//       productAmount: 1,
-//       productData: null,
-//       productLoading: false,
-//       productLoadingFailed: false,
-//       isShowAddedMessage: false,
-//       productAdded: false,
-//       productAddSending: false,
-//     };
-//   },
-//   computed: {
-//     pricePretty() {
-//       return numberFormat(this.product.price);
-//     },
-//     product() {
-//       return this.productData;
-//     },
-//     category() {
-//       return this.productData.category;
-//     },
-//     colors() {
-//       return this.productData.colors.map((color) => {
-//         return {
-//           ...color,
-//           backgroundColor: `background-color: ${color.code}`,
-//         };
-//       });
-//     },
-//   },
-//   methods: {
-//     ...mapActions(["addProductToCart"]),
-//     goToPage,
-//     addToCart() {
-//       this.productAdded = false;
-//       this.productAddSending = true;
-//       this.addProductToCart({
-//         productId: this.product.id,
-//         amount: this.productAmount,
-//       }).then(() => {
-//         this.isShowAddedMessage = true;
-//         this.productAdded = true;
-//         this.productAddSending = false;
-//       });
-
-//       this.productAmount = 1;
-//     },
-//     loadProduct() {
-//       this.productLoading = true;
-//       this.productLoadingFailed = false;
-//       axios
-//         .get(API_BASE_URL + "/api/products/" + this.$route.params.id)
-//         .then((response) => (this.productData = response.data))
-//         .catch(() => (this.productLoadingFailed = true))
-//         .then(() => (this.productLoading = false));
-//     },
-//   },
-//   components: { FormCounter, BaseModal },
-//   created() {
-//     this.loadProduct();
-//   },
-//   beforeRouteUpdate() {
-//     this.loadProduct();
-//   },
-// };
 </script>
