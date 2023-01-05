@@ -1,6 +1,6 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <div v-if="productLoading">
+  <div v-if="productStatus.isLoading">
     <div class="lds-roller">
       <div></div>
       <div></div>
@@ -12,25 +12,11 @@
       <div></div>
     </div>
   </div>
-  <div v-else-if="!productData">
+  <div v-else-if="productStatus.isFailed">
     <div style="font-size: 54px">Произошла ошибка при загрузке товаров.</div>
     <button @click.prevent="loadProduct" class="button--reload">Попробовать еще раз</button>
   </div>
   <div v-else>
-    <div class="content__top">
-      <ul class="breadcrumbs">
-        <li class="breadcrumbs__item">
-          <router-link class="breadcrumbs__link" :to="{ name: 'main' }"> Каталог </router-link>
-        </li>
-        <li class="breadcrumbs__item">
-          <router-link class="breadcrumbs__link" :to="{ name: 'main' }"> {{ category.title }} </router-link>
-        </li>
-        <li class="breadcrumbs__item">
-          <a class="breadcrumbs__link"> {{ product.title }} </a>
-        </li>
-      </ul>
-    </div>
-
     <section class="item">
       <div class="item__pics pics">
         <div class="pics__wrapper">
@@ -43,7 +29,7 @@
         <h2 class="item__title">{{ product.title }}</h2>
         <div class="item__form">
           <form class="form" action="#" method="POST" @submit.prevent="addToCart">
-            <b class="item__price"> {{ pricePretty }} </b>
+            <b class="item__price"> {{ product.pricePretty }} </b>
 
             <fieldset class="form__block">
               <legend class="form__legend">Цвет:</legend>
@@ -147,83 +133,67 @@
 </template>
 
 <script>
-import goToPage from "@/helpers/goToPage";
-import numberFormat from "@/helpers/numberFormat";
 import FormCounter from "@/components/FormCounter.vue";
 import BaseModal from "@/components/BaseModal.vue";
-import axios from "axios";
-import { API_BASE_URL } from "@/config";
-import { mapActions } from "vuex";
+import { useStore } from "vuex";
+import { defineComponent, ref } from "vue";
+import useProduct from "@/hooks/useProduct";
 
-export default {
+export default defineComponent({
   props: {
     productId: { type: [Number, String], required: true },
   },
-  data() {
+  components: {
+    BaseModal,
+    FormCounter,
+  },
+  setup(props) {
+    const $store = useStore();
+    const {
+      product,
+      category,
+      colors,
+      status: productStatus,
+      fetchProduct,
+    } = useProduct();
+
+    const isShowAddedMessage = ref(false);
+    const productAmount = ref(1);
+    const productAdded = ref(false);
+    const productAddSending = ref(false);
+    const addToCart = () => {
+      productAdded.value = false;
+      productAddSending.value = true;
+      $store
+        .dispatch("addProductToCart", {
+          productId: product.value.id,
+          amount: productAmount.value,
+        })
+        .then(() => {
+          isShowAddedMessage.value = true;
+          productAdded.value = true;
+          productAddSending.value = false;
+        });
+
+      productAmount.value = 1;
+    };
+
+    fetchProduct(props.productId);
+
     return {
-      productAmount: 1,
-      productData: null,
-      productLoading: false,
-      productLoadingFailed: false,
-      isShowAddedMessage: false,
-      productAdded: false,
-      productAddSending: false,
+      addToCart,
+      productAmount,
+      productData: product,
+      productStatus,
+      isShowAddedMessage,
+      productAdded,
+      productAddSending,
+      product,
+      category,
+      colors,
     };
   },
-  computed: {
-    pricePretty() {
-      return numberFormat(this.product.price);
-    },
-    product() {
-      return this.productData;
-    },
-    category() {
-      return this.productData.category;
-    },
-    colors() {
-      return this.productData.colors.map((color) => {
-        return {
-          ...color,
-          backgroundColor: `background-color: ${color.code}`,
-        };
-      });
-    },
-  },
-  methods: {
-    ...mapActions(["addProductToCart"]),
-    goToPage,
-    addToCart() {
-      this.productAdded = false;
-      this.productAddSending = true;
-      this.addProductToCart({
-        productId: this.product.id,
-        amount: this.productAmount,
-      }).then(() => {
-        this.isShowAddedMessage = true;
-        this.productAdded = true;
-        this.productAddSending = false;
-      });
-
-      this.productAmount = 1;
-    },
-    loadProduct() {
-      this.productLoading = true;
-      this.productLoadingFailed = false;
-      axios
-        .get(API_BASE_URL + "/api/products/" + this.productId)
-        .then((response) => (this.productData = response.data))
-        .catch(() => (this.productLoadingFailed = true))
-        .then(() => (this.productLoading = false));
-    },
-  },
-  components: { FormCounter, BaseModal },
-  created() {
-    this.loadProduct();
-  },
-  beforeRouteUpdate() {
-    this.loadProduct();
-  },
-};
+});
 </script>
 
 <style scoped>
