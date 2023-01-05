@@ -2,7 +2,7 @@
   <teleport v-if="open" to="#teleport-target">
     <div class="teleport-blackout"></div>
     <div class="teleport-modal" @click="onOutsideClick">
-      <div ref="content" class="teleport-modal__content">
+      <div ref="contentElement" class="teleport-modal__content">
         <button type="button" class="teleport-modal__close" @click="doClose">
           X
         </button>
@@ -13,57 +13,84 @@
 </template>
 
 <script>
-let openedCount = 0;
-let atleastOneOpen = false;
-export default {
+import { defineComponent, ref, watch } from "vue";
+import useModal from "@/hooks/useModal";
+
+export default defineComponent({
   props: {
     open: { type: Boolean },
   },
-  methods: {
-    onOutsideClick($event) {
-      if (
-        $event.target !== this.$refs.content &&
-        $event.target.contains(this.$refs.content)
-      ) {
-        this.doClose();
-      }
-    },
-    doClose() {
-      this.$emit("update:open", false);
-    },
-    checkBlackoutState() {
-      if (!openedCount) {
-        atleastOneOpen = false;
-        document.body.style.overflow = null;
-        document.body.style.paddingRight = null;
-      } else if (!atleastOneOpen && openedCount === 1) {
-        atleastOneOpen = true;
-        document.body.style.paddingRight =
-          window.innerWidth - document.documentElement.clientWidth + "px";
-        document.body.style.overflow = "hidden";
-      }
-    },
-  },
-  watch: {
-    open: {
-      handler(isOpen) {
-        if (isOpen) {
-          openedCount += 1;
-        } else {
-          openedCount -= 1;
-        }
+  setup(props, { emit: $emit }) {
+    const contentElement = ref(null);
+    const { doOpen, doClose } = useModal();
 
-        this.checkBlackoutState();
+    const onOutsideClick = ($event) => {
+      if (
+        $event.target !== contentElement.value &&
+        $event.target.contains(contentElement.value)
+      ) {
+        doCloseModal();
+      }
+    };
+    const doCloseModal = () => {
+      $emit("update:open", false);
+    };
+
+    watch(
+      () => props.open,
+      (isOpen) => {
+        if (isOpen) {
+          doOpen();
+        } else {
+          doClose();
+        }
       },
-    },
+      { immediate: true }
+    );
+
+    return {
+      doClose: doCloseModal,
+      onOutsideClick,
+      contentElement,
+    };
   },
-  created() {
-    if (this.open) {
-      openedCount += 1;
-      this.checkBlackoutState();
-    }
-  },
-};
+});
+
+// export default {
+//   methods: {
+//     checkBlackoutState() {
+//       if (!openedCount) {
+//         atleastOneOpen = false;
+//         document.body.style.overflow = null;
+//         document.body.style.paddingRight = null;
+//       } else if (!atleastOneOpen && openedCount === 1) {
+//         atleastOneOpen = true;
+//         document.body.style.paddingRight =
+//           window.innerWidth - document.documentElement.clientWidth + "px";
+//         document.body.style.overflow = "hidden";
+//       }
+//     },
+//   },
+//   watch: {
+//     open: {
+//       handler(isOpen) {
+//         if (isOpen) {
+//           openedCount += 1;
+//         } else {
+//           openedCount -= 1;
+//         }
+
+//         this.checkBlackoutState();
+//       },
+//     },
+//   },
+//   created() {
+//     if (this.open) {
+//       openedCount += 1;
+//       this.checkBlackoutState();
+//     }
+//   },
+// };
 </script>
 
 <style scoped>
