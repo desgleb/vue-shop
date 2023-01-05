@@ -1,6 +1,6 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <main class="content container" v-if="productLoading">
+  <main class="content container" v-if="productStatus.isLoading">
     <div class="lds-roller">
       <div></div>
       <div></div>
@@ -12,7 +12,7 @@
       <div></div>
     </div>
   </main>
-  <main class="content container" v-else-if="!productData">
+  <main class="content container" v-else-if="productStatus.isFailed">
     <div style="font-size: 54px">Произошла ошибка при загрузке товаров.</div>
     <button @click.prevent="loadProduct" class="button--reload">Попробовать еще раз</button>
   </main>
@@ -43,7 +43,7 @@
         <h2 class="item__title">{{ product.title }}</h2>
         <div class="item__form">
           <form class="form" action="#" method="POST" @submit.prevent="addToCart">
-            <b class="item__price"> {{ pricePretty }} </b>
+            <b class="item__price"> {{ product.pricePretty }} </b>
 
             <fieldset class="form__block">
               <legend class="form__legend">Цвет:</legend>
@@ -147,14 +147,12 @@
 </template>
 
 <script>
-import numberFormat from "@/helpers/numberFormat";
 import FormCounter from "@/components/FormCounter.vue";
 import BaseModal from "@/components/BaseModal.vue";
-import axios from "axios";
-import { API_BASE_URL } from "@/config";
 import { useStore } from "vuex";
-import { computed, defineComponent, ref } from "vue";
+import { defineComponent, ref } from "vue";
 import { useRoute } from "vue-router";
+import useProduct from "@/hooks/useProduct";
 
 export default defineComponent({
   components: {
@@ -164,29 +162,16 @@ export default defineComponent({
   setup() {
     const $store = useStore();
     const $route = useRoute();
-
-    const productAmount = ref(1);
-    const productData = ref(null);
-
-    const pricePretty = computed(() => {
-      return numberFormat(product.value.price);
-    });
-    const product = computed(() => {
-      return productData.value;
-    });
-    const category = computed(() => {
-      return productData.value.category;
-    });
-    const colors = computed(() => {
-      return productData.value.colors.map((color) => {
-        return {
-          ...color,
-          backgroundColor: `background-color: ${color.code}`,
-        };
-      });
-    });
+    const {
+      product,
+      category,
+      colors,
+      status: productStatus,
+      fetchProduct,
+    } = useProduct();
 
     const isShowAddedMessage = ref(false);
+    const productAmount = ref(1);
     const productAdded = ref(false);
     const productAddSending = ref(false);
     const addToCart = () => {
@@ -206,30 +191,16 @@ export default defineComponent({
       productAmount.value = 1;
     };
 
-    const productLoading = ref(false);
-    const productLoadingFailed = ref(false);
-    const loadProduct = () => {
-      productLoading.value = true;
-      productLoadingFailed.value = false;
-      axios
-        .get(API_BASE_URL + "/api/products/" + $route.params.id)
-        .then((response) => (productData.value = response.data))
-        .catch(() => (productLoadingFailed.value = true))
-        .then(() => (productLoading.value = false));
-    };
-
-    loadProduct();
+    fetchProduct($route.params.id);
 
     return {
       addToCart,
       productAmount,
-      productData,
-      productLoading,
-      productLoadingFailed,
+      productData: product,
+      productStatus,
       isShowAddedMessage,
       productAdded,
       productAddSending,
-      pricePretty,
       product,
       category,
       colors,
